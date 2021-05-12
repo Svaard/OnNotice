@@ -1,5 +1,6 @@
 {
     "title" : "Reminder",
     "message" : "I wonder where that fish did go. A fish, a fish, a fishy. O.",
-    "voice" : "Daniel"
+    "voice" : "Daniel",
+    "time" : 50
 }
