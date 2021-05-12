@@ -1,7 +1,5 @@
-import os
+import subprocess
 
 title = "Test"
 message = "test"
-command = "osascript -e \"display notification "{}" with title "{}"\"".format(message, title)
-
-os.system(command)
+subprocess.run(['osascript', '-e', f'display notification "{message}" with title "{title}"'])
