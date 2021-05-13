@@ -11,20 +11,21 @@ from apscheduler.triggers.combining import OrTrigger
 from apscheduler.triggers.cron import CronTrigger
 import subprocess
 import asyncio
-import time
 import json
 
 try:
     with open('files/config.json') as config:
         notification = json.load(config)
+        title = notification['title']
+        message = notification['message']
+        voice = notification['voice']
+        notice = notification['time']
 except FileNotFoundError:
-    print("Config file is missing.")
-
-
-title = notification['title']
-message = notification['message']
-voice = notification['voice']
-notice = notification['time']
+    print("Config file is missing. Create config file to change default settings.")
+    title = "Reminder"
+    message = "Stand up and stretch for a few minutes."
+    voice = "Alex"
+    notice = 42
 
 def macNotice():
     subprocess.run(['osascript', '-e', f'display notification "{message}" with title "{title}"'])
