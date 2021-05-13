@@ -14,8 +14,12 @@ import asyncio
 import time
 import json
 
-file = open('files/config.json')
-notification = json.load(file)
+try:
+    with open('files/config.json') as config:
+        notification = json.load(config)
+except FileNotFoundError:
+    print("Config file is missing.")
+
 
 title = notification['title']
 message = notification['message']
