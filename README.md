@@ -2,4 +2,4 @@
 To run script in background:
 <br>
   ‣ Unix based system - `$python notice.py &`<br>
-  ‣ Windows system - `C:\\>pythonw notice.py` <br>
+  ‣ Windows system - `C:\>pythonw notice.py` <br>
