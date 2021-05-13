@@ -9,27 +9,39 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.combining import OrTrigger
 from apscheduler.triggers.cron import CronTrigger
+from notifypy import Notify
 import subprocess
+import platform
 import asyncio
 import json
+import sys
 
 try:
     with open('files/config.json') as config:
         notification = json.load(config)
         title = notification['title']
         message = notification['message']
-        voice = notification['voice']
-        notice = notification['time']
+        if platform.system() == "Darwin":
+            voice = notification['voice']
+            notice = notification['time']
+        if platform.system() == "Windows":
+            winNotification = Notify()
+            winNotification.title = title
+            winNotification.message = message
 except FileNotFoundError:
     print("Config file is missing. Create config file to change default settings.")
     title = "Reminder"
     message = "Stand up and stretch for a few minutes."
-    voice = "Alex"
-    notice = 42
+    if platform.system() == "Darwin":
+        voice = "Alex"
+        notice = 42
 
 def macNotice():
     subprocess.run(['osascript', '-e', f'display notification "{message}" with title "{title}"'])
     subprocess.run(['osascript', '-e', f'say "{message}" using "{voice}"'])
+
+def winNotice():
+    winNotification.send()
 
 sched = BackgroundScheduler(daemon=True)
 
@@ -60,7 +72,14 @@ trigger = OrTrigger([
     CronTrigger(hour=23, minute=notice)
 ])
 
-sched.add_job(macNotice, trigger)
+if platform.system() == "Darwin":
+    sched.add_job(macNotice, trigger)
+elif platform.system() == "Windows":
+    sched.add(winNotice, trigger)
+else:
+    print("Your platform isn't supported yet.")
+    sys.exit()
+
 sched.start()
 
 loop = asyncio.get_event_loop()
