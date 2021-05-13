@@ -10,6 +10,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.combining import OrTrigger
 from apscheduler.triggers.cron import CronTrigger
 import subprocess
+import asyncio
 import time
 import json
 
@@ -57,5 +58,8 @@ trigger = OrTrigger([
 sched.add_job(macNotice, trigger)
 sched.start()
 
-while True:
-    time.sleep(30)
+loop = asyncio.get_event_loop()
+try:
+    loop.run_forever()
+finally:
+    loop.close()
